@@ -1,0 +1,258 @@
+query FindIssueId {
+  repository(owner: "octocat", name: "hello-world") {
+    issue(number: 349) {
+      id
+    }
+  }
+}
+
+mutation AddReactionToIssue($addReactionInput: AddReactionInput!) {
+  addReaction(input: $addReactionInput) {
+    reaction {
+      content
+    }
+    subject {
+      id
+    }
+  }
+}
+
+mutation AddCommentToIssue {
+  addComment(input: {subjectId: "MDU6SXNzdWUyMzEzOTE1NTE=", body: "Hello, I am from GraphQL"}) {
+    commentEdge {
+      node {
+        author {
+          login
+        }
+      }
+    }
+    subject {
+      id
+    }
+  }
+}
+
+query GetUserByLogin {
+  user(login: "octocat") {
+    createdAt
+    company
+    login
+    databaseId
+    id
+  }
+}
+
+query GetType {
+  node(id: "MDQ6VXNlcjU4MzIzMQ==") {
+    __typename
+    id
+  }
+}
+
+query GetUserById {
+  node(id: "MDQ6VXNlcjU4MzIzMQ==") {
+    ... on User {
+      name
+      login
+      bio
+    }
+  }
+}
+
+query GetOrgMembers {
+  organization(login: "github") {
+    membersWithRole(first: 100) {
+      edges {
+        node {
+          name
+          avatarUrl
+        }
+      }
+    }
+  }
+}
+
+query GetPullRequestMergeable {
+  repository(owner: "octocat", name: "Hello-World") {
+    pullRequests(last: 10) {
+      edges {
+        node {
+          number
+          mergeable
+        }
+      }
+      totalCount
+    }
+  }
+}
+
+query GetPullRequestSummary {
+  repository(owner: "octocat", name: "Hello-World") {
+    pullRequest(number: 1) {
+      commits(first: 10) {
+        edges {
+          node {
+            commit {
+              oid
+              message
+            }
+          }
+        }
+      }
+      comments(first: 10) {
+        edges {
+          node {
+            body
+            author {
+              login
+            }
+          }
+        }
+      }
+      reviews(first: 10) {
+        edges {
+          node {
+            state
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetRepos($number_of_repos: Int!) {
+  viewer {
+    name
+    repositories(last: $number_of_repos) {
+      nodes {
+        name
+      }
+    }
+  }
+}
+
+query publicRepositoriesByOrganization($slug: String!) {
+  enterprise(slug: $slug) {
+    ...enterpriseFragment
+  }
+}
+
+fragment enterpriseFragment on Enterprise {
+  ... on Enterprise {
+    name
+    organizations(first: 100) {
+      nodes {
+        name
+        ... on Organization {
+          name
+          repositories(privacy: PUBLIC, first: 100) {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetUserSummary {
+  viewer {
+    repositories(first: 50) {
+      edges {
+        repository: node {
+          name
+          pullRequests(first: 20) {
+            edges {
+              pullRequest: node {
+                title
+                comments(first: 10) {
+                  edges {
+                    comment: node {
+                      bodyHTML
+                    }
+                  }
+                }
+              }
+            }
+          }
+          issues(first: 20) {
+            totalCount
+            edges {
+              issue: node {
+                title
+                bodyHTML
+                comments(first: 10) {
+                  edges {
+                    comment: node {
+                      bodyHTML
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    followers(first: 10) {
+      edges {
+        follower: node {
+          login
+        }
+      }
+    }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+    nodeCount
+  }
+}
+
+query GetRateLimit {
+  viewer {
+    login
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+
+query GetLabels {
+  rateLimit {
+    cost
+    limit
+    nodeCount
+    remaining
+    resetAt
+  }
+  viewer {
+    login
+    repositories(first: 100) {
+      edges {
+        node {
+          id
+          issues(first: 50) {
+            edges {
+              node {
+                id
+                labels(first: 60) {
+                  edges {
+                    node {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
