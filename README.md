@@ -8,6 +8,9 @@ https://github.com/skevy/graphiql-app
 ## Migration
 https://developer.github.com/v4/guides/migrating-from-rest/
 
+## Important
+https://developer.github.com/v4/guides/resource-limitations/
+
 ## Resources
 https://github.blog/2016-09-14-the-github-graphql-api/
 https://landscape.graphql.org/
